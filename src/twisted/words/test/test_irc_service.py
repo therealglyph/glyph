@@ -6,6 +6,7 @@ Tests for IRC portions of L{twisted.words.service}.
 """
 
 from twisted.cred import checkers, portal
+from twisted.python.compat import unicode
 from twisted.test import proto_helpers
 from twisted.words.protocols import irc
 from twisted.words.service import InMemoryWordsRealm, IRCFactory, IRCUser
@@ -73,7 +74,8 @@ class IRCUserTests(IRCTestCase):
         """
         response = self.ircUser.transport.value()
         self.ircUser.transport.clear()
-        response = response.decode("utf-8")
+        if isinstance("", unicode) and isinstance(response, bytes):
+            response = response.decode("utf-8")
         response = response.splitlines()
         return [irc.parsemsg(r) for r in response]
 
